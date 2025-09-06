@@ -22,14 +22,14 @@
             "schema": {
               "type": "object",
               "properties": {
-                "name": {
-                  "example": "edris"
-                },
                 "email": {
                   "example": "edris.emperator@gmail.com"
                 },
                 "password": {
                   "example": "12345678"
+                },
+                "name": {
+                  "example": "edris"
                 }
               }
             }
@@ -71,6 +71,33 @@
         "responses": {
           "201": {
             "description": "Created"
+          }
+        }
+      }
+    },
+    "/login-user": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
