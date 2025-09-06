@@ -1,0 +1,10 @@
+npx prisma init
+npx prisma db push
+
+
+
+node .\swagger.js
+
+
+
+npx nx reset cache
