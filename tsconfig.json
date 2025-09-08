@@ -11,6 +11,9 @@
     },
     {
       "path": "./apps/api-geteway"
+    },
+    {
+      "path": "./apps/user-ui"
     }
   ]
 }
