@@ -80,8 +80,8 @@ export const sendOtp = async (
 
   await sendEmail(email, 'Verify Your Email ', template, { name, otp });
 
-  await redis.set(`otp:${email}`, otp, 'EX', 300);
-  await redis.set(`otp_cooldown:${email}`, 'true', 'EX', 60);
+  await redis.set(`otp:${email}`, otp, 'EX', 300); // 5 min
+  await redis.set(`otp_cooldown:${email}`, 'true', 'EX', 60); // 1 min otp watting for another otp request
 };
 
 export const verifyOtp = async (
@@ -90,6 +90,7 @@ export const verifyOtp = async (
   next: NextFunction
 ) => {
   const storedOtp = await redis.get(`otp:${email}`);
+
   if (!storedOtp) {
     throw new ValidationError('Invalid or expired OTP!');
   }
@@ -135,11 +136,11 @@ export const handleForgotPassword = async (
     if (!user) throw new ValidationError(`${userType} not found!`);
 
     // Check otp restirctions
-    await checkOtpRestrictions(email, next);
-    await trackOtpRequests(email, next);
+    // await checkOtpRestrictions(email, next);
+    // await trackOtpRequests(email, next);
 
     // Generate OTP and send Email
-    await sendOtp(user.name, email, 'forgot-password-user-main');
+    await sendOtp(user.name, email, 'forgot-password-user-mail');
 
     res
       .status(200)

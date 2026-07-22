@@ -12,11 +12,11 @@ import {
 import prisma from '@packages/libs/prisma';
 import { AuthError, ValidationError } from '@packages/error-handler';
 
-import jwt from 'jsonwebtoken';
+import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import { setCookie } from '../utils/cookies/setCookie';
 
 // Rigister a new user
-export const userRegisteration = async (
+export const userRegistration = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -29,6 +29,8 @@ export const userRegisteration = async (
     const { name, email } = req.body;
 
     const existingUser = await prisma.users.findUnique({ where: { email } });
+
+    console.log({ existingUser });
 
     if (existingUser) {
       return next(new ValidationError('User already exists with this email!'));
@@ -71,8 +73,6 @@ export const verifyUser = async (
     if (typeof password !== 'string') {
       return next(new ValidationError('Password must be a string!'));
     }
-
-    console.log({ password });
 
     await verifyOtp(email, otp, next);
 
@@ -144,6 +144,61 @@ export const loginUser = async (
     });
   } catch (error) {
     return next(error);
+  }
+};
+
+// refresh token user
+export const refreshToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const refreshToken = req.cookies.refresh_token;
+
+    if (!refreshToken) {
+      return new JsonWebTokenError('Unauthorized! No refresh token. ');
+    }
+
+    const decode = jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET as string
+    ) as { id: string; role: string };
+
+    if (!decode || decode.id || decode.role) {
+      return new JsonWebTokenError('Forbidden! Invalid refresh token.');
+    }
+
+    // let account;
+    //  if (decode.role === 'user')
+    const user = await prisma.users.findUnique({ where: { id: decode.id } });
+
+    if (!user) return new AuthError('Forbidden! User/Seller not found');
+
+    const newAccessToken = jwt.sign(
+      { id: decode.id, role: decode.role },
+      process.env.ACCESS_TOKEN_SECRET as string,
+      { expiresIn: '15m' }
+    );
+
+    setCookie(res, 'access_token', newAccessToken);
+
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+// get logged in user
+export const getUser = async (req: any, res: Response, next: NextFunction) => {
+  try {
+    const user = req.user;
+    res.status(201).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    next(error);
   }
 };
 

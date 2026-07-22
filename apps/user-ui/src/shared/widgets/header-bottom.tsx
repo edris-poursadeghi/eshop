@@ -11,10 +11,14 @@ import React, { useEffect, useState } from 'react';
 import { navItems } from '../../configs/constants';
 import Link from 'next/link';
 import { NavItemTypes } from '../../configs/global';
+import useUser from 'apps/user-ui/src/hooks/useUser';
 
 function HeaderBottom() {
   const [show, setShow] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
+  const { isError, user, isLoading, refetch } = useUser();
+
+  console.log(user);
 
   // Track scroll postion
 
@@ -38,6 +42,7 @@ function HeaderBottom() {
         isSticky ? 'fixed top-0 left-0 z-[7] bg-white shadow-lg' : 'relative'
       } `}
     >
+      asdfasdfasdfasdfadsfasdf
       <div
         className={`w-[80%] relative  m-auto flex items-center justify-between ${
           isSticky ? 'pt-3' : 'py-0'

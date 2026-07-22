@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start:dev": "ts-node -r tsconfig-paths/register apps/auth-service/src/main.ts"
+    "start:dev": "ts-node -r tsconfig-paths/register apps/auth-service/src/main.ts",
+    "auth-docs": "tsx src/swagger.js"
   },
   "nx": {
     "targets": {

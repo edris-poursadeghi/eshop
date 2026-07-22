@@ -1,10 +1,15 @@
 npx prisma init
-npx prisma db push
+npx prisma db push  // update our local changes to remote
 
 
-
+ D:\PROJECTS\microservices\e-shop\e-shop\apps\auth-service\src> node swagger.js
 node .\swagger.js
 
+
+npx kill-port 8080
+
+test api is running
+curl http://localhost:8080
 
 
 npx nx reset cache

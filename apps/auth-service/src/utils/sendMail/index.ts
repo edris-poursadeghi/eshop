@@ -22,7 +22,7 @@ const renderEmailTemplate = async (
   data: Record<string, any>
 ): Promise<string> => {
   const templatePath = path.join(
-    process.cwd(),
+    process.cwd(), //  current working directory
     'apps',
     'auth-service',
     'src',
