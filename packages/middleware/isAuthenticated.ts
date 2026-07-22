@@ -20,15 +20,17 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
       role: 'user' | 'seller';
     };
 
-    console.log({ decode });
+    console.log({
+      decode,
+      token,
+      ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET,
+    });
 
-    if (!decode || decode.id) {
+    if (!decode) {
       return res.status(401).json({
         message: 'Unauthorized! Invalid token.',
       });
     }
-
-
 
     const account = await prisma.users.findUnique({ where: { id: decode.id } });
 
