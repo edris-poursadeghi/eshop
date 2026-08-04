@@ -224,9 +224,13 @@ function SignUp() {
                 {signupMutation.isPending ? 'Sign up ...' : 'Signup'}
               </button>
 
-              {serverError && (
-                <p className="text-red-500 text-sm mt-2">{serverError}</p>
-              )}
+              {signupMutation.isError &&
+                signupMutation.error instanceof AxiosError && (
+                  <p className="text-red-500 text-sm mt-2 ">
+                    {signupMutation.error?.response?.data?.message ||
+                      signupMutation.error.message}
+                  </p>
+                )}
             </form>
           ) : (
             <div>

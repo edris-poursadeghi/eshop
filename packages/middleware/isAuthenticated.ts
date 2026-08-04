@@ -7,10 +7,13 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
 
   try {
     const token =
-      req.cookies.access_token || req.headers.authorization?.split(' ')[1];
+      // req.cookies.access_token || req.headers.authorization?.split(' ')[1];
+      req.cookies['access_token'] ||
+      req.cookies['seller-access-token'] ||
+      req.headers.authorization?.split(' ')[1];
 
     if (!token) {
-      return res.status(401).json({ message: 'Unauthorized! Token missing.' });
+      return res.status(401).json({ message: 'Unauthorized! Token missing. 1' });
     }
 
     // verify token
@@ -22,21 +25,29 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
 
     console.log({
       decode,
-      token,
-      ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET,
     });
 
     if (!decode) {
       return res.status(401).json({
-        message: 'Unauthorized! Invalid token.',
+        message: 'Unauthorized! Invalid token. 2',
       });
     }
 
-    const account = await prisma.users.findUnique({ where: { id: decode.id } });
+    let account;
+    if (decode.role === 'user') {
+      account = await prisma.users.findUnique({ where: { id: decode.id } });
+      req.user = account;
+    } else if (decode.role === 'seller') {
+      account = await prisma.sellers.findUnique({
+        where: { id: decode.id },
+        include: { shop: true },
+      });
+      req.seller = account;
+    }
+
+    req.role = decode.role;
 
     console.log({ account });
-
-    req.user = account;
 
     if (!account) {
       return res.status(401).json({
@@ -49,7 +60,7 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
     console.log(error);
 
     return res.status(401).json({
-      message: 'Unauthorized! Token expired or invalid',
+      message: 'Unauthorized! Token expired or invalid 3',
     });
   }
 };

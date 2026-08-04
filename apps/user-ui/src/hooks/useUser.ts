@@ -15,7 +15,7 @@ const useUser = () => {
   } = useQuery({
     queryKey: ['user'],
     queryFn: fetchUser,
-    staleTime: 1000 * 60 * 5,// 5min
+    staleTime: 1000 * 60 * 5, // 5min
     retry: 1,
   });
 
