@@ -18,6 +18,7 @@ import {
   Settings,
   TicketPercent,
   LogOut,
+  Rows3Icon,
 } from 'lucide-react';
 import SidebarMenu from './sidebar.menu';
 
@@ -120,7 +121,7 @@ function SidebarWrapper() {
               <SidebarItem
                 title="All Product"
                 icon={
-                  <SquarePlus
+                  <Rows3Icon
                     color={getIconColor('/dashboard/all-product')}
                     //fill={getIconColor('/payments')}
                   />
