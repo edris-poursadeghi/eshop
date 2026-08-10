@@ -44,7 +44,7 @@ function Page() {
       console.log(error);
 
       const errorMessage =
-        (error.response?.data as { message?: string }).message ||
+        (error.response?.data as { message?: string })?.message ||
         'Invalid credentials';
       setServerError(errorMessage);
     },

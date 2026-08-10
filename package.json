@@ -12,6 +12,7 @@
   "private": true,
   "dependencies": {
     "@prisma/client": "^6.15.0",
+    "@tanstack/react-query": "^5.89.0",
     "axios": "^1.11.0",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
@@ -24,7 +25,6 @@
     "ioredis": "^5.7.0",
     "jotai": "^2.20.2",
     "jsonwebtoken": "^9.0.2",
-    "loadsh": "^0.0.4",
     "lucide-react": "^1.28.0",
     "morgan": "^1.10.1",
     "next": "~15.2.4",
@@ -34,11 +34,11 @@
     "react-dom": "19.0.0",
     "react-hook-form": "^7.84.0",
     "react-hot-toast": "^2.6.0",
+    "react-quill-new": "^3.8.3",
     "stripe": "^22.3.2",
     "styled-components": "^6.4.4",
     "swagger-autogen": "^2.23.7",
-    "swagger-ui-express": "^5.0.1",
-    "@tanstack/react-query": "^5.89.0"
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "@nx/docker": "21.4.1",

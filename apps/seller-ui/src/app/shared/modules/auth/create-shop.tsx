@@ -138,7 +138,7 @@ const CreateShop = ({
         </label>
         <select
           className="w-full border p-2 border-gray-300 outline-0 !rounded mb-1"
-          {...register('category', { required: 'Country is requried' })}
+          {...register('category', { required: 'Category is requried' })}
         >
           <option value="">Select your Category</option>
           {shopCategories.map((category) => {

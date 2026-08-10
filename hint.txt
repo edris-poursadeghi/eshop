@@ -14,6 +14,8 @@ curl http://localhost:8080
 
 npx nx reset cache
 
+// add new microservices
+nx g  @nx/express:app product-serivce --directory=apps/product-service --e2eTestRunner=none
 
 // prisma
 schema-viz ./prisma/schema.prisma
