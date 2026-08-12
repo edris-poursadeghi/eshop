@@ -9,11 +9,13 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
     const token =
       // req.cookies.access_token || req.headers.authorization?.split(' ')[1];
       req.cookies['access_token'] ||
-      req.cookies['seller-access-token'] ||
+      req.cookies['seller_access_token'] ||
       req.headers.authorization?.split(' ')[1];
 
     if (!token) {
-      return res.status(401).json({ message: 'Unauthorized! Token missing. 1' });
+      return res
+        .status(401)
+        .json({ message: 'Unauthorized! Token missing. 1' });
     }
 
     // verify token
@@ -33,6 +35,7 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
       });
     }
 
+    // Find the account based on role
     let account;
     if (decode.role === 'user') {
       account = await prisma.users.findUnique({ where: { id: decode.id } });
@@ -46,8 +49,9 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
     }
 
     req.role = decode.role;
+    req.xxxxx = 'xxxxx';
 
-    console.log({ account });
+      console.log({ account });
 
     if (!account) {
       return res.status(401).json({
@@ -55,9 +59,11 @@ const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
       });
     }
 
+    console.log(`11111`, req.seller.id || req.user);
+
     return next();
   } catch (error) {
-    console.log(error);
+    console.log({ error });
 
     return res.status(401).json({
       message: 'Unauthorized! Token expired or invalid 3',

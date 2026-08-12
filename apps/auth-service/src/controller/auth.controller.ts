@@ -121,7 +121,7 @@ export const loginUser = async (
     }
 
     res.clearCookie('seller_access_token');
-    res.clearCookie('seller-refresh-token');
+    res.clearCookie('seller_refresh_token');
 
     // Generate access and refresh token
 
@@ -164,8 +164,8 @@ export const refreshToken = async (
     // const refreshToken = req.cookies.refresh_token;
 
     const refreshToken =
-      req.cookies['refrsh_token'] ||
-      req.cookies['seller-refrsh_token'] ||
+      req.cookies['refresh_token'] ||
+      req.cookies['seller_refresh_token'] ||
       req.headers.authorization?.split(' ')[1];
 
     if (!refreshToken) {
@@ -177,8 +177,8 @@ export const refreshToken = async (
       process.env.REFRESH_TOKEN_SECRET as string
     ) as { id: string; role: string };
 
-    if (!decode || decode.id || decode.role) {
-      return new JsonWebTokenError('Forbidden! Invalid refresh token.');
+    if (!decode || !decode.id || !decode.role) {
+      return next(new JsonWebTokenError('Forbidden! Invalid refresh token.'));
     }
 
     console.log({ decode });
@@ -196,7 +196,9 @@ export const refreshToken = async (
 
     console.log({ account });
 
-    if (!account) return new AuthError('Forbidden! User/Seller not found');
+    if (!account) {
+      return next(new AuthError('Forbidden! User/Seller not found')); // ✅ Fixed
+    }
 
     const newAccessToken = jwt.sign(
       { id: decode.id, role: decode.role },
@@ -209,12 +211,12 @@ export const refreshToken = async (
     if (decode.role === 'user') {
       setCookie(res, 'access_token', newAccessToken);
     } else if (decode.role === 'seller') {
-      setCookie(res, 'seller-refrsh_token', newAccessToken);
+      setCookie(res, 'seller_access_token', newAccessToken);
     }
 
     req.role = decode.role;
 
-    return res.status(200).json({ success: true });
+    return res.status(200).json({ success: true, accessToken: newAccessToken });
   } catch (error) {
     return next(error);
   }
@@ -522,8 +524,8 @@ export const loginSeller = async (
     );
 
     // store the refresh and access token in token in an httpOnly secure cookie
-    setCookie(res, 'seller-refresh-token', refreshToken);
-    setCookie(res, 'seller-access-token', accessToken);
+    setCookie(res, 'seller_refresh_token', refreshToken);
+    setCookie(res, 'seller_access_token', accessToken);
 
     res.status(200).json({
       message: 'Login successfull !',

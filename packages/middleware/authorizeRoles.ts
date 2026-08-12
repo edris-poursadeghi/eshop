@@ -2,6 +2,8 @@ import { AuthError } from '@packages/error-handler';
 import { NextFunction, Response } from 'express';
 
 export const isSeller = (req: any, res: Response, next: NextFunction) => {
+  console.log('isSeller', req.role);
+
   if (req.role !== 'seller') {
     return next(new AuthError('Account denied: Seller only'));
   }
@@ -9,6 +11,7 @@ export const isSeller = (req: any, res: Response, next: NextFunction) => {
 };
 
 export const isUser = (req: any, res: Response, next: NextFunction) => {
+  console.log('isUser', req.role);
   if (req.role !== 'user') {
     return next(new AuthError('Account denied: User only'));
   }
